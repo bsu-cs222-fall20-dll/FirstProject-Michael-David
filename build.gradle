@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'edu.bsu.cs222.wikipedia'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    implementation('com.google.code.gson:gson:2.8.6')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+mainClassName = 'edu.bsu.cs222.wikipedia.WikipediaConnectionDemo'
