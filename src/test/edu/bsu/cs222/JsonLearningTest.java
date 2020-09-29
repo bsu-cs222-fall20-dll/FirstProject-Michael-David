@@ -4,12 +4,9 @@ import com.google.gson.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Map;
 
 public class JsonLearningTest {
@@ -17,6 +14,7 @@ public class JsonLearningTest {
     public void testCountRevisions() {
         JsonParser parser = new JsonParser();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sample.json");
+        assert inputStream != null;
         Reader reader = new InputStreamReader(inputStream);
         JsonElement rootElement = parser.parse(reader);
         JsonObject rootObject = rootElement.getAsJsonObject();
@@ -26,6 +24,7 @@ public class JsonLearningTest {
             JsonObject entryObject = entry.getValue().getAsJsonObject();
             array = entryObject.getAsJsonArray("revisions");
         }
+        assert array != null;
         Assertions.assertEquals(4, array.size());
         for(JsonElement item: array) {
             System.out.println(item);

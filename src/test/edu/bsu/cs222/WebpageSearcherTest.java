@@ -14,19 +14,17 @@ import java.util.Scanner;
 public class WebpageSearcherTest {
 
     @Test
-    public void SearchZappa() throws MalformedURLException {
+    public void SearchZappa() {
         WebpageSearcher webpageSearcher = new WebpageSearcher();
         String searchOption = "Frank Zappa";
         String result = webpageSearcher.search(searchOption);
         String expected = "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&rvprop=timestamp%7Cuser&rvlimit=20&titles=frank%20zappa&redirects=";
         Assertions.assertEquals(expected, result);
 
-        //"https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&rvprop=timestamp%7Cuser&rvlimit=20&titles=frank%20zappa&redirects="
-
     }
 
     @Test
-    public void TestWatermelon() throws MalformedURLException {
+    public void TestWatermelon() {
         WebpageSearcher webpageSearcher = new WebpageSearcher();
         String searchOption = "Watermelon";
         String result = webpageSearcher.search(searchOption);
