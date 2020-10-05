@@ -24,7 +24,7 @@ import java.util.List;
 public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setHeight(400);
+        primaryStage.setHeight(800);
         primaryStage.setWidth(400);
         VBox parent = new VBox();
         parent.getChildren().add(new Label("Wikipedia Searcher"));
@@ -33,12 +33,14 @@ public class GUI extends Application {
         urlArea.getChildren().add(textField);
         parent.getChildren().add(urlArea);
         TextFlow output = new TextFlow();
+        TextFlow listOutPut = new TextFlow();
         Button mostEditsButton = new Button("Search most edits");
         Button recentEditsButton = new Button("Search recent edits");
 
         mostEditsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                listOutPut.getChildren().clear();
                 output.getChildren().clear();
                 Parser parser = new Parser();
                 WebpageSearcher webpageSearcher = new WebpageSearcher();
@@ -82,7 +84,7 @@ public class GUI extends Application {
                         List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
                         List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
                         List<String> dates = listReceiver.createDateList(revisionsArray);
-                        listDisplayer.displayListByMostEdits(userList);
+                        listOutPut.getChildren().add(listDisplayer.displayListByMostEdits(userList));
                     }
                 }
             }
@@ -90,6 +92,7 @@ public class GUI extends Application {
         recentEditsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                listOutPut.getChildren().clear();
                 output.getChildren().clear();
                 Parser parser = new Parser();
                 WebpageSearcher webpageSearcher = new WebpageSearcher();
@@ -133,7 +136,7 @@ public class GUI extends Application {
                         List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
                         List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
                         List<String> dates = listReceiver.createDateList(revisionsArray);
-                        listDisplayer.displayListByTime(userList, dates, adjustedTimezones);
+                        listOutPut.getChildren().add(listDisplayer.displayListByTime(userList, dates, adjustedTimezones));
                     }
                 }
             }
@@ -142,6 +145,7 @@ public class GUI extends Application {
         parent.getChildren().add(recentEditsButton);
         parent.getChildren().add(mostEditsButton);
         parent.getChildren().add(output);
+        parent.getChildren().add(listOutPut);
 
 
         primaryStage.setScene(new Scene(parent));

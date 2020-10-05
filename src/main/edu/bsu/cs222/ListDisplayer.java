@@ -1,30 +1,47 @@
 package edu.bsu.cs222;
 
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ListDisplayer {
-    public void displayListByTime(List<String> userList, List<String> dates, List<String> adjustedTimezones) {
-        System.out.println("Time     Day        Modifier");
-        System.out.println("============================");
-        for(int i = 0; i < userList.size(); i++) {
-            System.out.println(adjustedTimezones.get(i) + " " + dates.get(i) + " " + userList.get(i));
+
+    public TextFlow displayListByTime(List<String> userList, List<String> dates, List<String> adjustedTimezones) {
+        Text listByTimeHeader = new Text();
+        listByTimeHeader.setText("Time       Day             Modifier\n" +
+                "============================\n");
+        Text listByTime = new Text();
+        String outputString = "";
+        for (int i = 0; i < userList.size(); i++) {
+            outputString += (adjustedTimezones.get(i) + " " + dates.get(i) + " " + userList.get(i) + "\n");
         }
+        listByTime.setText(outputString);
+        TextFlow output = new TextFlow(listByTimeHeader, listByTime);
+        return output;
     }
 
-    public void displayListByMostEdits(List<String> userList) {
-        System.out.println("# of Edits   Modifier");
-        System.out.println("=====================");
+    public TextFlow displayListByMostEdits(List<String> userList) {
+        Text listByMostEditsHeader = new Text();
+        listByMostEditsHeader.setText("# of Edits   Modifier\n" +
+                "=====================\n");
         HashMap<String,Integer> editorHashMap = new HashMap<>(editorAndEdits(userList));
+        Text listByMostEdits = new Text();
+        String outputString = "";
         for(int i = 0; i <= editorHashMap.size(); i++) {
             HashMap<String,Integer> mostEdits = maxValueLeft(editorHashMap);
             for(String key: mostEdits.keySet()) {
-                System.out.println(editorHashMap.get(key) + "            " + key);
+                outputString += (editorHashMap.get(key) + "                " + key + "\n");
                 editorHashMap.remove(key);
             }
-        }
 
+        }
+        listByMostEdits.setText(outputString);
+        TextFlow output = new TextFlow(listByMostEditsHeader, listByMostEdits);
+        return output;
 
     }
     public HashMap<String, Integer> maxValueLeft(HashMap<String,Integer> hashMap) {

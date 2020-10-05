@@ -29,7 +29,6 @@ public class WebpageSearcher {
             connection.connect();
             return connection;
         } catch (Exception e) {
-            System.out.println("Cannot connect to the internet. Try again.");
             return null;
         }
     }
