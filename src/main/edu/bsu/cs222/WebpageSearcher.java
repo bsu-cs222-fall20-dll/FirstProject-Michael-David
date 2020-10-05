@@ -10,6 +10,7 @@ public class WebpageSearcher {
         String searchOptionConverted = convert(searchOption);
         return "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&rvprop=timestamp%7Cuser&rvlimit=20&titles=" +
                 searchOptionConverted + "&redirects=";
+
     }
 
     private String convert(String searchOption) {
