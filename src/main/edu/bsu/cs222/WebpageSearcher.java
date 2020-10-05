@@ -8,9 +8,8 @@ import java.net.URL;
 public class WebpageSearcher {
     public String search(String searchOption) {
         String searchOptionConverted = convert(searchOption);
-        String urlString = "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&rvprop=timestamp%7Cuser&rvlimit=20&titles=" +
+        return "https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&rvprop=timestamp%7Cuser&rvlimit=20&titles=" +
                 searchOptionConverted + "&redirects=";
-        return urlString;
     }
 
     private String convert(String searchOption) {
