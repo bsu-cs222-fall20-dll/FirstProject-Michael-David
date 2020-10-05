@@ -25,4 +25,4 @@ javafx {
 
 }
 
-mainClassName = 'edu.bsu.cs222.Main'
+mainClassName = 'edu.bsu.cs222.GUI'
