@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class Parser {
 
     public JsonObject parse(InputStream input) {
@@ -21,30 +21,20 @@ public class Parser {
 
     public boolean isNull(JsonObject rootObject) {
         JsonObject pages = rootObject.getAsJsonObject("query").getAsJsonObject("pages");
-        boolean nullity;
         String itemString = pages.toString();
-        if (itemString.contains("missing")) {
-            nullity = true;
-        } else {
-            nullity = false;
-        }
-        return nullity;
+        return itemString.contains("missing");
     }
 
     public Boolean isRedirected(String from, String to) {
         if(from.equalsIgnoreCase(to)) {
             return false;
-        } else if(to.equals("")) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return !to.equals("");
     }
 
 
     public String redirectResults(JsonObject rootObject) {
         JsonArray fromTo = rootObject.getAsJsonObject("query").getAsJsonArray("redirects");
-        String to = "";
+        StringBuilder to = new StringBuilder();
         if(fromTo != null) {
             for(JsonElement item: fromTo) {
                 String itemString = item.toString();
@@ -55,14 +45,14 @@ public class Parser {
                 int commaLocation = itemString.indexOf(",");
                 for(int i = 0; i < itemString.length(); i++) {
                     if (i > commaLocation){
-                        to = to + itemString.charAt(i);
+                        to.append(itemString.charAt(i));
                     }
                 }
-                to = to.replace("\"","");
-                to = to.replace(":","");
+                to = new StringBuilder(to.toString().replace("\"", ""));
+                to = new StringBuilder(to.toString().replace(":", ""));
             }
         }
-        return to;
+        return to.toString();
 
     }
 

@@ -11,24 +11,24 @@ public class ListReceiver {
     public List<String> createUserList(JsonArray array) {
         List<String> userArray = new ArrayList<>();
         for(JsonElement item: array) {
-            String user = "";
+            StringBuilder user = new StringBuilder();
             String uglyUserString = item.toString();
             uglyUserString = uglyUserString.replace("{","");
             uglyUserString = uglyUserString.replace("}","");
             uglyUserString = uglyUserString.replace("\"","");
             uglyUserString = uglyUserString.replace("user:","");
             if(uglyUserString.contains("anon")) {
-                user = "Anonymous";
+                user = new StringBuilder("Anonymous");
             } else {
                 int commaLocation = uglyUserString.indexOf(",");
 
                 for(int i = 0; i < uglyUserString.length(); i++) {
                     if (i < commaLocation) {
-                         user = user + uglyUserString.charAt(i);
+                         user.append(uglyUserString.charAt(i));
                     }
                 }
             }
-            userArray.add(user);
+            userArray.add(user.toString());
         }
         return userArray;
     }
@@ -36,7 +36,7 @@ public class ListReceiver {
     public List<String> createTimezoneList(JsonArray array) {
         List<String> timezoneArray = new ArrayList<>();
         for(JsonElement item: array) {
-            String timezone = "";
+            StringBuilder timezone = new StringBuilder();
             String uglyUserString = item.toString();
             uglyUserString = uglyUserString.replace("{","");
             uglyUserString = uglyUserString.replace("}","");
@@ -47,17 +47,17 @@ public class ListReceiver {
                 int commaLocation = uglyUserString.indexOf(",");
                 for(int i = commaLocation; i < uglyUserString.length(); i++) {
                     if (i > commaLocation + 11) {
-                        timezone = timezone + uglyUserString.charAt(i);
+                        timezone.append(uglyUserString.charAt(i));
                     }
                 }
-            timezoneArray.add(timezone);
+            timezoneArray.add(timezone.toString());
         }
         return timezoneArray;
     }
 
     public List<String> adjustTimezone(List<String> timezoneList) {
         List<String> adjustedTimezone = new ArrayList<>();
-        String finalString = "";
+        String finalString;
         for(String time: timezoneList) {
             String temporaryString = time.substring(0,2);
             int timeInt = Integer.parseInt(temporaryString);
@@ -78,7 +78,7 @@ public class ListReceiver {
     public List<String> createDateList(JsonArray array) {
         List<String> dateArray = new ArrayList<>();
         for(JsonElement item: array) {
-            String date = "";
+            StringBuilder date = new StringBuilder();
             String uglyUserString = item.toString();
             uglyUserString = uglyUserString.replace("{","");
             uglyUserString = uglyUserString.replace("}","");
@@ -88,9 +88,9 @@ public class ListReceiver {
             uglyUserString = uglyUserString.replace(",anon:", "");
             int commaLocation = uglyUserString.indexOf(",");
             for(int i = commaLocation + 1; i < commaLocation + 11; i++) {
-                date = date + uglyUserString.charAt(i);
+                date.append(uglyUserString.charAt(i));
             }
-            dateArray.add(date);
+            dateArray.add(date.toString());
         }
         return dateArray;
     }

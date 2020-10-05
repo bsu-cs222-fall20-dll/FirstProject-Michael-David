@@ -3,8 +3,6 @@ package edu.bsu.cs222;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,7 +21,7 @@ import java.util.List;
 
 public class GUI extends Application {
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
         primaryStage.setHeight(800);
         primaryStage.setWidth(400);
         VBox parent = new VBox();
@@ -37,110 +35,100 @@ public class GUI extends Application {
         Button mostEditsButton = new Button("Search most edits");
         Button recentEditsButton = new Button("Search recent edits");
 
-        mostEditsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                listOutPut.getChildren().clear();
-                output.getChildren().clear();
-                Parser parser = new Parser();
-                WebpageSearcher webpageSearcher = new WebpageSearcher();
-                ListReceiver listReceiver = new ListReceiver();
-                ListDisplayer listDisplayer = new ListDisplayer();
+        mostEditsButton.setOnAction(actionEvent -> {
+            listOutPut.getChildren().clear();
+            output.getChildren().clear();
+            Parser parser = new Parser();
+            WebpageSearcher webpageSearcher = new WebpageSearcher();
+            ListReceiver listReceiver = new ListReceiver();
+            ListDisplayer listDisplayer = new ListDisplayer();
 
-                String result = webpageSearcher.search(textField.getText());
-                URL wikiURL = null;
+            String result = webpageSearcher.search(textField.getText());
+            URL wikiURL = null;
+            try {
+                wikiURL = new URL(result);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
+            if (wikipediaConnect == null) {
+                Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
+                output.getChildren().add(cannotConnect);
+            } else {
+                InputStream is = null;
                 try {
-                    wikiURL = new URL(result);
-                } catch (MalformedURLException e) {
+                    is = webpageSearcher.getPageStream(wikipediaConnect);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
-                if (wikipediaConnect == null) {
-                    Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
-                    output.getChildren().add(cannotConnect);
+                JsonObject wikiObject = parser.parse(is);
+                JsonArray revisionsArray = parser.getRevisionsList(wikiObject);
+
+                boolean nullity = parser.isNull(wikiObject);
+                if (nullity) {
+                    Text pageDoesNotExist = new Text("Page does not exist!");
+                    output.getChildren().add(pageDoesNotExist);
                 } else {
-                    InputStream is = null;
-                    try {
-                        is = webpageSearcher.getPageStream(wikipediaConnect);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String redirectOutput = parser.redirectResults(wikiObject);
+                    if (parser.isRedirected(textField.getText(), redirectOutput)){
+                        output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
+
                     }
-                    JsonObject wikiObject = parser.parse(is);
-                    JsonArray revisionsArray = parser.getRevisionsList(wikiObject);
-
-                    boolean nullity = parser.isNull(wikiObject);
-                    if (nullity) {
-                        Text pageDoesNotExist = new Text("Page does not exist!");
-                        output.getChildren().add(pageDoesNotExist);
-                    } else {
-                        String redirectOutput = parser.redirectResults(wikiObject);
-                        if (parser.isRedirected(textField.getText(), redirectOutput) == true){
-                            output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
-
-                        }
 
 
-                        List<String> userList = listReceiver.createUserList(revisionsArray);
-                        List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
-                        List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
-                        List<String> dates = listReceiver.createDateList(revisionsArray);
-                        listOutPut.getChildren().add(listDisplayer.displayListByMostEdits(userList));
-                    }
+                    List<String> userList = listReceiver.createUserList(revisionsArray);
+                    listOutPut.getChildren().add(listDisplayer.displayListByMostEdits(userList));
                 }
             }
         });
-        recentEditsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                listOutPut.getChildren().clear();
-                output.getChildren().clear();
-                Parser parser = new Parser();
-                WebpageSearcher webpageSearcher = new WebpageSearcher();
-                ListReceiver listReceiver = new ListReceiver();
-                ListDisplayer listDisplayer = new ListDisplayer();
+        recentEditsButton.setOnAction(actionEvent -> {
+            listOutPut.getChildren().clear();
+            output.getChildren().clear();
+            Parser parser = new Parser();
+            WebpageSearcher webpageSearcher = new WebpageSearcher();
+            ListReceiver listReceiver = new ListReceiver();
+            ListDisplayer listDisplayer = new ListDisplayer();
 
-                String result = webpageSearcher.search(textField.getText());
-                URL wikiURL = null;
+            String result = webpageSearcher.search(textField.getText());
+            URL wikiURL = null;
+            try {
+                wikiURL = new URL(result);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
+            if (wikipediaConnect == null) {
+                Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
+                output.getChildren().add(cannotConnect);
+            } else {
+                InputStream is = null;
                 try {
-                    wikiURL = new URL(result);
-                } catch (MalformedURLException e) {
+                    is = webpageSearcher.getPageStream(wikipediaConnect);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
-                if (wikipediaConnect == null) {
-                    Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
-                    output.getChildren().add(cannotConnect);
+                JsonObject wikiObject = parser.parse(is);
+                JsonArray revisionsArray = parser.getRevisionsList(wikiObject);
+
+                boolean nullity = parser.isNull(wikiObject);
+                if (nullity) {
+                    Text pageDoestNotExist = new Text("Page does not exist!");
+                    output.getChildren().add(pageDoestNotExist);
                 } else {
-                    InputStream is = null;
-                    try {
-                        is = webpageSearcher.getPageStream(wikipediaConnect);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String redirectOutput = parser.redirectResults(wikiObject);
+                    if (parser.isRedirected(textField.getText(), redirectOutput)){
+                        output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
+
                     }
-                    JsonObject wikiObject = parser.parse(is);
-                    JsonArray revisionsArray = parser.getRevisionsList(wikiObject);
-
-                    boolean nullity = parser.isNull(wikiObject);
-                    if (nullity) {
-                        Text pageDoestNotExist = new Text("Page does not exist!");
-                        output.getChildren().add(pageDoestNotExist);
-                    } else {
-                        String redirectOutput = parser.redirectResults(wikiObject);
-                        if (parser.isRedirected(textField.getText(), redirectOutput) == true){
-                            output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
-
-                        }
 
 
-                        List<String> userList = listReceiver.createUserList(revisionsArray);
-                        List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
-                        List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
-                        List<String> dates = listReceiver.createDateList(revisionsArray);
-                        listOutPut.getChildren().add(listDisplayer.displayListByTime(userList, dates, adjustedTimezones));
-                    }
+                    List<String> userList = listReceiver.createUserList(revisionsArray);
+                    List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
+                    List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
+                    List<String> dates = listReceiver.createDateList(revisionsArray);
+                    listOutPut.getChildren().add(listDisplayer.displayListByTime(userList, dates, adjustedTimezones));
                 }
             }
-
         });
         parent.getChildren().add(recentEditsButton);
         parent.getChildren().add(mostEditsButton);

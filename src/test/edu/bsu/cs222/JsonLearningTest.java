@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class JsonLearningTest {
     @Test
+    @SuppressWarnings("deprecation")
     public void testCountRevisions() {
         JsonParser parser = new JsonParser();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sample.json");
