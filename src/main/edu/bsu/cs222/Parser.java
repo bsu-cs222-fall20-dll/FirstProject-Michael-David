@@ -37,7 +37,6 @@ public class Parser {
         } else if(to.equals("")) {
             return false;
         } else {
-            System.out.println("Your search has been redirected from " + from + " to " + to + ".");
             return true;
         }
     }

@@ -5,15 +5,15 @@ import com.google.gson.JsonObject;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -24,19 +24,22 @@ import java.util.List;
 public class GUI extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
+        primaryStage.setHeight(400);
+        primaryStage.setWidth(400);
         VBox parent = new VBox();
         parent.getChildren().add(new Label("Wikipedia Searcher"));
         HBox urlArea = new HBox(new Label("URL"));
         TextField textField = new TextField();
-        TextField outPutField = new TextField();
         urlArea.getChildren().add(textField);
-        urlArea.getChildren().add(outPutField);
         parent.getChildren().add(urlArea);
+        TextFlow output = new TextFlow();
         Button mostEditsButton = new Button("Search most edits");
         Button recentEditsButton = new Button("Search recent edits");
+
         mostEditsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                output.getChildren().clear();
                 Parser parser = new Parser();
                 WebpageSearcher webpageSearcher = new WebpageSearcher();
                 ListReceiver listReceiver = new ListReceiver();
@@ -51,7 +54,8 @@ public class GUI extends Application {
                 }
                 HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
                 if (wikipediaConnect == null) {
-                    System.out.println("Cannot connect to the internet. Try again.");
+                    Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
+                    output.getChildren().add(cannotConnect);
                 } else {
                     InputStream is = null;
                     try {
@@ -64,10 +68,14 @@ public class GUI extends Application {
 
                     boolean nullity = parser.isNull(wikiObject);
                     if (nullity) {
-                        System.out.println("Page does not exist!");
+                        Text pageDoesNotExist = new Text("Page does not exist!");
+                        output.getChildren().add(pageDoesNotExist);
                     } else {
                         String redirectOutput = parser.redirectResults(wikiObject);
-                        parser.isRedirected(textField.getText(), redirectOutput);
+                        if (parser.isRedirected(textField.getText(), redirectOutput) == true){
+                            output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
+
+                        }
 
 
                         List<String> userList = listReceiver.createUserList(revisionsArray);
@@ -82,6 +90,7 @@ public class GUI extends Application {
         recentEditsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                output.getChildren().clear();
                 Parser parser = new Parser();
                 WebpageSearcher webpageSearcher = new WebpageSearcher();
                 ListReceiver listReceiver = new ListReceiver();
@@ -96,7 +105,8 @@ public class GUI extends Application {
                 }
                 HttpURLConnection wikipediaConnect = webpageSearcher.connectToWikipedia(wikiURL);
                 if (wikipediaConnect == null) {
-                    System.out.println("Cannot connect to the internet. Try again.");
+                    Text cannotConnect = new Text("Cannot connect to the internet. Try again.");
+                    output.getChildren().add(cannotConnect);
                 } else {
                     InputStream is = null;
                     try {
@@ -109,10 +119,14 @@ public class GUI extends Application {
 
                     boolean nullity = parser.isNull(wikiObject);
                     if (nullity) {
-                        System.out.println("Page does not exist!");
+                        Text pageDoestNotExist = new Text("Page does not exist!");
+                        output.getChildren().add(pageDoestNotExist);
                     } else {
                         String redirectOutput = parser.redirectResults(wikiObject);
-                        parser.isRedirected(textField.getText(), redirectOutput);
+                        if (parser.isRedirected(textField.getText(), redirectOutput) == true){
+                            output.getChildren().add(new Text("Your search has been redirected from " + textField.getText()+ " to " + redirectOutput + "."));
+
+                        }
 
 
                         List<String> userList = listReceiver.createUserList(revisionsArray);
@@ -127,6 +141,7 @@ public class GUI extends Application {
         });
         parent.getChildren().add(recentEditsButton);
         parent.getChildren().add(mostEditsButton);
+        parent.getChildren().add(output);
 
 
         primaryStage.setScene(new Scene(parent));
