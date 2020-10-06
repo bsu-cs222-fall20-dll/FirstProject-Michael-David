@@ -37,23 +37,37 @@ public class Parser {
         StringBuilder to = new StringBuilder();
         if(fromTo != null) {
             for(JsonElement item: fromTo) {
-                String itemString = item.toString();
-                itemString = itemString.replace("{", "");
-                itemString = itemString.replace("}", "");
-                itemString = itemString.replace("from", "");
-                itemString = itemString.replace("to", "");
-                int commaLocation = itemString.indexOf(",");
-                for(int i = 0; i < itemString.length(); i++) {
-                    if (i > commaLocation){
-                        to.append(itemString.charAt(i));
-                    }
-                }
-                to = new StringBuilder(to.toString().replace("\"", ""));
-                to = new StringBuilder(to.toString().replace(":", ""));
+                to = buildRedirectName(item);
             }
         }
         return to.toString();
+    }
 
+    public StringBuilder buildRedirectName(JsonElement item) {
+        StringBuilder to = new StringBuilder();
+        String itemString = item.toString();
+        itemString = tidyRedirectResults(itemString);
+        int commaLocation = itemString.indexOf(",");
+        for(int i = 0; i < itemString.length(); i++) {
+            if (i > commaLocation){
+                to.append(itemString.charAt(i));
+            }
+        }
+        return tidyToString(to);
+    }
+
+    public String tidyRedirectResults(String itemString) {
+        itemString = itemString.replace("{", "");
+        itemString = itemString.replace("}", "");
+        itemString = itemString.replace("from", "");
+        itemString = itemString.replace("to", "");
+        return itemString;
+    }
+
+    public StringBuilder tidyToString(StringBuilder to) {
+        to = new StringBuilder(to.toString().replace("\"", ""));
+        to = new StringBuilder(to.toString().replace(":", ""));
+        return to;
     }
 
 

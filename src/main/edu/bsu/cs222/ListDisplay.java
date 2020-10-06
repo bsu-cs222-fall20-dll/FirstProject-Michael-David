@@ -36,14 +36,16 @@ public class ListDisplay {
                 outputString.append(editorHashMap.get(key)).append("                ").append(key).append("\n");
                 editorHashMap.remove(key);
             }
-
         }
         listByMostEdits.setText(outputString.toString());
         return new TextFlow(listByMostEditsHeader, listByMostEdits);
 
     }
+
     public HashMap<String, Integer> maxValueLeft(HashMap<String,Integer> hashMap) {
         Map.Entry<String, Integer> maxEntry = null;
+        HashMap<String, Integer> trueMap = new HashMap<>();
+
         for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
             if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
                 maxEntry = entry;
@@ -52,7 +54,6 @@ public class ListDisplay {
         assert maxEntry != null;
         int value = maxEntry.getValue();
         String key = maxEntry.getKey();
-        HashMap<String, Integer> trueMap = new HashMap<>();
         trueMap.put(key,value);
         return trueMap;
     }

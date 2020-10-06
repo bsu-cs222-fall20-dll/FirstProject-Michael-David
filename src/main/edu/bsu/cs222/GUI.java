@@ -41,7 +41,7 @@ public class GUI extends Application {
             Parser parser = new Parser();
             WebpageSearcher webpageSearcher = new WebpageSearcher();
             ListReceiver listReceiver = new ListReceiver();
-            ListDisplay listDisplayer = new ListDisplay();
+            ListDisplay listDisplay = new ListDisplay();
 
             String result = webpageSearcher.search(textField.getText());
             URL wikiURL = null;
@@ -77,7 +77,7 @@ public class GUI extends Application {
 
 
                     List<String> userList = listReceiver.createUserList(revisionsArray);
-                    listOutPut.getChildren().add(listDisplayer.displayListByMostEdits(userList));
+                    listOutPut.getChildren().add(listDisplay.displayListByMostEdits(userList));
                 }
             }
         });
@@ -87,7 +87,7 @@ public class GUI extends Application {
             Parser parser = new Parser();
             WebpageSearcher webpageSearcher = new WebpageSearcher();
             ListReceiver listReceiver = new ListReceiver();
-            ListDisplay listDisplayer = new ListDisplay();
+            ListDisplay listDisplay = new ListDisplay();
 
             String result = webpageSearcher.search(textField.getText());
             URL wikiURL = null;
@@ -126,7 +126,7 @@ public class GUI extends Application {
                     List<String> timezones = listReceiver.createTimezoneList(revisionsArray);
                     List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
                     List<String> dates = listReceiver.createDateList(revisionsArray);
-                    listOutPut.getChildren().add(listDisplayer.displayListByTime(userList, dates, adjustedTimezones));
+                    listOutPut.getChildren().add(listDisplay.displayListByTime(userList, dates, adjustedTimezones));
                 }
             }
         });
