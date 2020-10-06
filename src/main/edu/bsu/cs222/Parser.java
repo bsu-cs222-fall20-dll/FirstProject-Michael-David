@@ -31,7 +31,6 @@ public class Parser {
         } else return !to.equals("");
     }
 
-
     public String redirectResults(JsonObject rootObject) {
         JsonArray fromTo = rootObject.getAsJsonObject("query").getAsJsonArray("redirects");
         StringBuilder to = new StringBuilder();
@@ -80,5 +79,4 @@ public class Parser {
         }
         return array;
     }
-
 }
