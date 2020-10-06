@@ -11,26 +11,37 @@ public class ListReceiver {
     public List<String> createUserList(JsonArray array) {
         List<String> userArray = new ArrayList<>();
         for(JsonElement item: array) {
-            StringBuilder user = new StringBuilder();
             String uglyUserString = item.toString();
-            uglyUserString = uglyUserString.replace("{","");
-            uglyUserString = uglyUserString.replace("}","");
-            uglyUserString = uglyUserString.replace("\"","");
-            uglyUserString = uglyUserString.replace("user:","");
-            if(uglyUserString.contains("anon")) {
-                user = new StringBuilder("Anonymous");
-            } else {
-                int commaLocation = uglyUserString.indexOf(",");
+            uglyUserString = tidyUserList(uglyUserString);
+            StringBuilder user = createUser(uglyUserString);
 
-                for(int i = 0; i < uglyUserString.length(); i++) {
-                    if (i < commaLocation) {
-                         user.append(uglyUserString.charAt(i));
-                    }
-                }
-            }
             userArray.add(user.toString());
         }
         return userArray;
+    }
+
+    public StringBuilder createUser(String uglyUserString) {
+        StringBuilder user = new StringBuilder();
+        if(uglyUserString.contains("anon")) {
+            user = new StringBuilder("Anonymous");
+        } else {
+            int commaLocation = uglyUserString.indexOf(",");
+
+            for(int i = 0; i < uglyUserString.length(); i++) {
+                if (i < commaLocation) {
+                    user.append(uglyUserString.charAt(i));
+                }
+            }
+        }
+        return user;
+    }
+
+    public String tidyUserList(String uglyUserString) {
+        uglyUserString = uglyUserString.replace("{","");
+        uglyUserString = uglyUserString.replace("}","");
+        uglyUserString = uglyUserString.replace("\"","");
+        uglyUserString = uglyUserString.replace("user:","");
+        return uglyUserString;
     }
 
     public List<String> createTimezoneList(JsonArray array) {
@@ -38,21 +49,27 @@ public class ListReceiver {
         for(JsonElement item: array) {
             StringBuilder timezone = new StringBuilder();
             String uglyUserString = item.toString();
-            uglyUserString = uglyUserString.replace("{","");
-            uglyUserString = uglyUserString.replace("}","");
-            uglyUserString = uglyUserString.replace("\"","");
-            uglyUserString = uglyUserString.replace("timestamp:","");
-            uglyUserString = uglyUserString.replace("Z","");
-            uglyUserString = uglyUserString.replace(",anon:", "");
-                int commaLocation = uglyUserString.indexOf(",");
-                for(int i = commaLocation; i < uglyUserString.length(); i++) {
-                    if (i > commaLocation + 11) {
-                        timezone.append(uglyUserString.charAt(i));
-                    }
+            uglyUserString = tidyTimezoneList(uglyUserString);
+
+            int commaLocation = uglyUserString.indexOf(",");
+            for(int i = commaLocation; i < uglyUserString.length(); i++) {
+                if (i > commaLocation + 11) {
+                    timezone.append(uglyUserString.charAt(i));
                 }
+            }
             timezoneArray.add(timezone.toString());
         }
         return timezoneArray;
+    }
+
+    public String tidyTimezoneList(String uglyUserString) {
+        uglyUserString = uglyUserString.replace("{","");
+        uglyUserString = uglyUserString.replace("}","");
+        uglyUserString = uglyUserString.replace("\"","");
+        uglyUserString = uglyUserString.replace("timestamp:","");
+        uglyUserString = uglyUserString.replace("Z","");
+        uglyUserString = uglyUserString.replace(",anon:", "");
+        return uglyUserString;
     }
 
     public List<String> adjustTimezone(List<String> timezoneList) {
@@ -80,12 +97,9 @@ public class ListReceiver {
         for(JsonElement item: array) {
             StringBuilder date = new StringBuilder();
             String uglyUserString = item.toString();
-            uglyUserString = uglyUserString.replace("{","");
-            uglyUserString = uglyUserString.replace("}","");
-            uglyUserString = uglyUserString.replace("\"","");
-            uglyUserString = uglyUserString.replace("timestamp:","");
-            uglyUserString = uglyUserString.replace("-","/");
-            uglyUserString = uglyUserString.replace(",anon:", "");
+
+            uglyUserString = tidyDate(uglyUserString);
+
             int commaLocation = uglyUserString.indexOf(",");
             for(int i = commaLocation + 1; i < commaLocation + 11; i++) {
                 date.append(uglyUserString.charAt(i));
@@ -93,5 +107,15 @@ public class ListReceiver {
             dateArray.add(date.toString());
         }
         return dateArray;
+    }
+
+    public String tidyDate(String uglyUserString) {
+        uglyUserString = uglyUserString.replace("{","");
+        uglyUserString = uglyUserString.replace("}","");
+        uglyUserString = uglyUserString.replace("\"","");
+        uglyUserString = uglyUserString.replace("timestamp:","");
+        uglyUserString = uglyUserString.replace("-","/");
+        uglyUserString = uglyUserString.replace(",anon:", "");
+        return uglyUserString;
     }
 }

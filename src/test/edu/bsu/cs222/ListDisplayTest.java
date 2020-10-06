@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class ListDisplayerTest {
+public class ListDisplayTest {
     @Test
     public void testListDisplay() throws IOException {
         Parser parser = new Parser();
@@ -29,8 +29,8 @@ public class ListDisplayerTest {
         List<String> adjustedTimezones = listReceiver.adjustTimezone(timezones);
         List<String> dates = listReceiver.createDateList(revisionsArray);
 
-        ListDisplayer listDisplayer = new ListDisplayer();
-        listDisplayer.displayListByTime(userList,dates,adjustedTimezones);
+        ListDisplay listDisplay = new ListDisplay();
+        listDisplay.displayListByTime(userList,dates,adjustedTimezones);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ListDisplayerTest {
         ListReceiver listReceiver = new ListReceiver();
         List<String> userList = listReceiver.createUserList(revisionsArray);
 
-        ListDisplayer listDisplayer = new ListDisplayer();
-        listDisplayer.displayListByMostEdits(userList);
+        ListDisplay listDisplay = new ListDisplay();
+        listDisplay.displayListByMostEdits(userList);
     }
 }

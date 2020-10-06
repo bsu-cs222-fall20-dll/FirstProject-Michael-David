@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListDisplayer {
+public class ListDisplay {
 
     public TextFlow displayListByTime(List<String> userList, List<String> dates, List<String> adjustedTimezones) {
         Text listByTimeHeader = new Text();

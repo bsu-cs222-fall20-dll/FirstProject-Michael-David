@@ -41,7 +41,7 @@ public class GUI extends Application {
             Parser parser = new Parser();
             WebpageSearcher webpageSearcher = new WebpageSearcher();
             ListReceiver listReceiver = new ListReceiver();
-            ListDisplayer listDisplayer = new ListDisplayer();
+            ListDisplay listDisplayer = new ListDisplay();
 
             String result = webpageSearcher.search(textField.getText());
             URL wikiURL = null;
@@ -87,7 +87,7 @@ public class GUI extends Application {
             Parser parser = new Parser();
             WebpageSearcher webpageSearcher = new WebpageSearcher();
             ListReceiver listReceiver = new ListReceiver();
-            ListDisplayer listDisplayer = new ListDisplayer();
+            ListDisplay listDisplayer = new ListDisplay();
 
             String result = webpageSearcher.search(textField.getText());
             URL wikiURL = null;
